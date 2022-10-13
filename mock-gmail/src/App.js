@@ -4,6 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Email } from "./Email.js";
 import SingleEmail from "./SingleEmail.js";
 import { SendEmailBox } from "./SendEmailBox.js";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+// Grid version 2
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -36,28 +43,37 @@ export default function App() {
     // console.log(emailID);
   }
   return (
-    <>
-      <div>
+    <Grid2 container spacing={3}>
+      <Grid2 xs>
+        <div className="inbox">
+          {data ? (
+            data.map((email) => {
+              return (
+                <Card
+                  
+                  variant="outlined"
+                  key={email.id}
+                  onClick={() => handleClick(email.id)}
+                >
+                  <Email
+                    sender={email.sender}
+                    subject={email.subject}
+                    id={email.id}
+                  />
+                </Card>
+              );
+            })
+          ) : (
+            <div></div>
+          )}
+        </div>
+      </Grid2>
+      <Grid2 xs>
+        {emailID ? <SingleEmail id={emailID} /> : "nothing here"}
+      </Grid2>
+      <Grid2 xs>
         <SendEmailBox redo={isLoadingFun} />{" "}
-      </div>
-      <ul>
-        {data ? (
-          data.map((email) => {
-            return (
-              <li key={email.id} onClick={() => handleClick(email.id)}>
-                <Email
-                  sender={email.sender}
-                  subject={email.subject}
-                  id={email.id}
-                />
-              </li>
-            );
-          })
-        ) : (
-          <li></li>
-        )}
-      </ul>
-      <div>{emailID ? <SingleEmail id={emailID} /> : "nothing here"}</div>
-    </>
+      </Grid2>
+    </Grid2>
   );
 }
