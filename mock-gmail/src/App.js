@@ -1,25 +1,22 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import { Email } from "./Email.js";
+import { SearchBar } from "./SearchBar.js";
 import SingleEmail from "./SingleEmail.js";
 import { SendEmailBox } from "./SendEmailBox.js";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+
 // Grid version 2
 
 export default function App() {
   const [data, setData] = useState(null);
   const [emailID, setEmailId] = useState(null);
-
+  const [url, setUrl] = useState("/emails");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3001/emails")
+    fetch("http://localhost:3001" + url)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -31,17 +28,17 @@ export default function App() {
       .then((data) => {
         setData(data);
       });
-  }, [isLoading]);
+  }, [isLoading, url]);
 
   function isLoadingFun() {
     setIsLoading(!isLoading);
-    console.log("isloading: " + isLoading);
   }
   function handleClick(id) {
     //  console.log(id);
     setEmailId(id);
     // console.log(emailID);
   }
+
   return (
     <Grid2 container spacing={3}>
       <Grid2 xs>
@@ -50,7 +47,6 @@ export default function App() {
             data.map((email) => {
               return (
                 <Card
-                  
                   variant="outlined"
                   key={email.id}
                   onClick={() => handleClick(email.id)}
@@ -69,6 +65,7 @@ export default function App() {
         </div>
       </Grid2>
       <Grid2 xs>
+        <SearchBar setUrl={setUrl} />
         {emailID ? <SingleEmail id={emailID} /> : "nothing here"}
       </Grid2>
       <Grid2 xs>
